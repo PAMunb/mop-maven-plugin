@@ -38,7 +38,12 @@ public class ProcessUtil {
                 out.append(line);
                 out.append("\n");
             }
-            System.out.println(out);
+            System.out.println(out);  // TODO: instead of writing in the standard
+                                      //       output, we should perhaps write to a
+                                      //       file (perhaps in an append mode).
+                                      //       we should also check the exit value
+                                      //       and perhaps kill the process.
+                                      //       see: https://stackoverflow.com/questions/51520032/java-processbuilder-how-can-i-get-error-code-when-i-execute-an-incorrect-process
         }
     }
 }
