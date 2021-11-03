@@ -15,9 +15,9 @@ public class ProcessUtil {
 
     static void executeExternalProgram(String... args) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(args);
-
+        //TODO: I was wondering that the following code could help us to fix some CLASSPATH issues.
 //        for(String k : environment.keySet()) {
-//            builder.environment().put(k, environment.get(k));
+//           builder.environment().put(k, environment.get(k));
 //        }
 
         Process process = builder.start();
@@ -39,8 +39,8 @@ public class ProcessUtil {
                 out.append("\n");
             }
             System.out.println(out);  // TODO: instead of writing in the standard
-                                      //       output, we should perhaps write to a
-                                      //       file (perhaps in an append mode).
+                                      //       output, we should write `out` to a
+                                      //       file (in an append mode?).
                                       //       we should also check the exit value
                                       //       and perhaps kill the process.
                                       //       see: https://stackoverflow.com/questions/51520032/java-processbuilder-how-can-i-get-error-code-when-i-execute-an-incorrect-process
