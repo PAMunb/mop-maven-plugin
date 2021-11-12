@@ -43,7 +43,7 @@ public class AgentGen extends AbstractMojo  {
 
             ProcessUtil.executeExternalProgram(pathToJavaMop + "/javamopagent",
                     pathToMopFiles + "/*.aj",
-                    project.getBasedir() + "/target/classes", "-v",
+                    project.getBasedir() + "/target/classes", //"-v",
                     "-n",
                     "JavaMOPAgent");
 
