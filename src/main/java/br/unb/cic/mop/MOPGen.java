@@ -40,11 +40,11 @@ public class MOPGen extends AbstractMojo {
     }
 
     private void executeJavaMop() throws IOException  {
-        System.out.println("--------------------------------------------------------");
-        System.out.println("(a) Executing javamop -merge " + pathToMopFiles + "/*.mop");
-        System.out.println("--------------------------------------------------------");
+        getLog().info("--------------------------------------------------------");
+        getLog().info("(a) Executing javamop -merge " + pathToMopFiles + "/*.mop");
+        getLog().info("--------------------------------------------------------");
 
-        ProcessUtil.executeExternalProgram(
+        ProcessUtil.executeExternalProgram(getLog(),
                 pathToJavaMop + "/javamop"
                 , "-merge"
                 , pathToMopFiles + "/*.mop");
@@ -52,10 +52,10 @@ public class MOPGen extends AbstractMojo {
 
     private void executeRVMonitor() throws IOException {
 
-        System.out.println("--------------------------------------------------------");
-        System.out.println("(b) Executing rv-monitor -merge " + pathToMopFiles + "/*.rvm");
-        System.out.println("--------------------------------------------------------");
-        ProcessUtil.executeExternalProgram(
+        getLog().info("--------------------------------------------------------");
+        getLog().info("(b) Executing rv-monitor -merge " + pathToMopFiles + "/*.rvm");
+        getLog().info("--------------------------------------------------------");
+        ProcessUtil.executeExternalProgram(getLog(),
                 pathToMonitor + "/rv-monitor"
                 , "-merge"
                 , "-d"
@@ -82,10 +82,6 @@ public class MOPGen extends AbstractMojo {
     }
 
     private void removeGeneratedJavaFiles() {
-        System.out.println("--------------------------------------------------------");
-        System.out.println("(b) Removing generated Java files");
-        System.out.println("--------------------------------------------------------");
-
         File dest = new File("./src/main/java/mop");
 
         if(dest.exists() && dest.isDirectory()) {

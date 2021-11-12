@@ -34,14 +34,14 @@ public class AgentGen extends AbstractMojo  {
             }
             sb.append(project.getBasedir() + "/target/classes");
 
-            System.out.println("--------------------------------------------------------");
-            System.out.println("(c) Executing javamopagent " +  pathToMopFiles + "/*.aj");
-            System.out.println("--------------------------------------------------------");
+            getLog().info("--------------------------------------------------------");
+            getLog().info("(c) Executing javamopagent " +  pathToMopFiles + "/*.aj");
+            getLog().info("--------------------------------------------------------");
 
             ProcessUtil.addVariable("CLASSPATH", sb.toString());
 
 
-            ProcessUtil.executeExternalProgram(pathToJavaMop + "/javamopagent",
+            ProcessUtil.executeExternalProgram(getLog(), pathToJavaMop + "/javamopagent",
                     pathToMopFiles + "/*.aj",
                     project.getBasedir() + "/target/classes", //"-v",
                     "-n",
