@@ -27,7 +27,7 @@ public class MOPGen extends AbstractMojo {
     private String destinationPackage;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
         try {
             removeGeneratedJavaFiles();
             removeGeneratedMonitorFiles();
@@ -39,9 +39,9 @@ public class MOPGen extends AbstractMojo {
         }
     }
 
-    private void executeJavaMop() throws IOException  {
+    private void executeJavaMop() throws MojoExecutionException, IOException  {
         getLog().info("--------------------------------------------------------");
-        getLog().info("(a) Executing javamop -merge " + pathToMopFiles + "/*.mop");
+        getLog().info("Executing javamop -merge " + pathToMopFiles + "/*.mop");
         getLog().info("--------------------------------------------------------");
 
         ProcessUtil.executeExternalProgram(getLog(),
@@ -50,10 +50,10 @@ public class MOPGen extends AbstractMojo {
                 , pathToMopFiles + "/*.mop");
     }
 
-    private void executeRVMonitor() throws IOException {
+    private void executeRVMonitor() throws MojoExecutionException, IOException {
 
         getLog().info("--------------------------------------------------------");
-        getLog().info("(b) Executing rv-monitor -merge " + pathToMopFiles + "/*.rvm");
+        getLog().info("Executing rv-monitor -merge " + pathToMopFiles + "/*.rvm");
         getLog().info("--------------------------------------------------------");
         ProcessUtil.executeExternalProgram(getLog(),
                 pathToMonitor + "/rv-monitor"

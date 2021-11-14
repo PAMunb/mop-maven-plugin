@@ -23,7 +23,7 @@ public class AgentGen extends AbstractMojo  {
     private String pathToMopFiles;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
         try {
             List<Dependency> cp = project.getDependencies();
             StringBuilder sb = new StringBuilder();
@@ -35,7 +35,7 @@ public class AgentGen extends AbstractMojo  {
             sb.append(project.getBasedir() + "/target/classes");
 
             getLog().info("--------------------------------------------------------");
-            getLog().info("(c) Executing javamopagent " +  pathToMopFiles + "/*.aj");
+            getLog().info("Executing javamopagent " +  pathToMopFiles + "/*.aj");
             getLog().info("--------------------------------------------------------");
 
             ProcessUtil.addVariable("CLASSPATH", sb.toString());

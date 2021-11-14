@@ -1,5 +1,6 @@
 package br.unb.cic.mop;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.BufferedReader;
@@ -16,12 +17,13 @@ public class ProcessUtil {
         environment.put(variable, value);
     }
 
-    static void executeExternalProgram(Log log, String... args) throws IOException {
+    static void executeExternalProgram(Log log, String... args) throws MojoExecutionException, IOException {
         ProcessBuilder builder = new ProcessBuilder(args);
-        //TODO: I was wondering that the following code could help us to fix some CLASSPATH issues.
 //        for(String k : environment.keySet()) {
+//           System.out.println(environment.get(k));
 //           builder.environment().put(k, environment.get(k));
 //        }
+
 
         Process process = builder.start();
 
@@ -35,20 +37,19 @@ public class ProcessUtil {
             log.info(out);
         }
 
-        if(process.exitValue() != 0) {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    out.append(line);
-                    out.append("\n");
-                }
-                log.error(out);  // TODO: instead of writing in the standard
-                //       output, we should write `out` to a
-                //       file (in an append mode?).
-                //       we should also check the exit value
-                //       and perhaps kill the process.
-                //       see: https://stackoverflow.com/questions/51520032/java-processbuilder-how-can-i-get-error-code-when-i-execute-an-incorrect-process
+        StringBuilder err = new StringBuilder();
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                err.append(line);
+                err.append("\n");
+            }
+            if(err.length() > 0) {
+                log.error(err);
+                throw new MojoExecutionException(err.toString());
             }
         }
+
     }
 }
