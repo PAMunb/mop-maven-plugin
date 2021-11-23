@@ -29,6 +29,9 @@ public class MOPGen extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         try {
+            getLog().info("--------------------------------------------------------");
+            getLog().info("Excluding previously generated files");
+            getLog().info("--------------------------------------------------------");
             removeGeneratedJavaFiles();
             removeGeneratedMonitorFiles();
             executeJavaMop();
@@ -65,8 +68,7 @@ public class MOPGen extends AbstractMojo {
     }
 
     private void removeGeneratedMonitorFiles() {
-        File dest = new File(pathToJavaMop + "/javamop");
-
+        File dest = new File(pathToMopFiles);
         if(dest.exists() && dest.isDirectory()) {
             String[] files = dest.list(new FilenameFilter() {
                 @Override
@@ -75,14 +77,17 @@ public class MOPGen extends AbstractMojo {
                 }
             });
             for(String s:  files) {
-                File file = new File(s);
+                File file = new File(dest.getAbsolutePath() + File.separator + s);
                 file.delete();
             }
         }
     }
 
     private void removeGeneratedJavaFiles() {
-        File dest = new File("./src/main/java/mop");
+        if(destinationPackage == null) {
+            destinationPackage = "./src/main/java/mop";
+        }
+        File dest = new File(destinationPackage);
 
         if(dest.exists() && dest.isDirectory()) {
             String[] files = dest.list(new FilenameFilter() {
@@ -92,7 +97,7 @@ public class MOPGen extends AbstractMojo {
                 }
             });
             for(String s:  files) {
-                File file = new File(s);
+                File file = new File(destinationPackage + File.separator + s);
                 file.delete();
             }
         }
