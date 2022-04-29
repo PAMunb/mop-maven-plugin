@@ -1,13 +1,12 @@
 package br.unb.cic.mop;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 
 public class ProcessUtil {
 
@@ -24,7 +23,6 @@ public class ProcessUtil {
 //           builder.environment().put(k, environment.get(k));
 //        }
 
-
         Process process = builder.start();
 
         StringBuilder out = new StringBuilder();
@@ -38,7 +36,6 @@ public class ProcessUtil {
         }
 
         StringBuilder err = new StringBuilder();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
             String line = null;
             while ((line = in.readLine()) != null) {

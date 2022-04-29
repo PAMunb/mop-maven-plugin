@@ -1,20 +1,20 @@
 package br.unb.cic.mop;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-
 @Mojo(name = "mop-gen", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class MOPGen extends AbstractMojo {
 
-    @Parameter(property = "path-to-java-mop")
+	private static final String SRC_MAIN_JAVA_MOP = "." + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + "mop";
+
+	@Parameter(property = "path-to-java-mop")
     private String pathToJavaMop;
 
     @Parameter(property = "path-to-rv-monitor")
@@ -25,9 +25,16 @@ public class MOPGen extends AbstractMojo {
 
     @Parameter(property = "destination-package")
     private String destinationPackage;
+    
+    @Parameter(property = "skipMopAgent")
+    private boolean skipMopAgent = false;
 
     @Override
     public void execute() throws MojoExecutionException {
+    	if(skipMopAgent) {
+    		getLog().info("MopGen skipped.");
+    		return;
+    	}
         try {
             getLog().info("--------------------------------------------------------");
             getLog().info("Excluding previously generated files");
@@ -36,71 +43,60 @@ public class MOPGen extends AbstractMojo {
             removeGeneratedMonitorFiles();
             executeJavaMop();
             executeRVMonitor();
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             throw new MojoExecutionException(e.getMessage());
         }
     }
 
     private void executeJavaMop() throws MojoExecutionException, IOException  {
         getLog().info("--------------------------------------------------------");
-        getLog().info("Executing javamop -merge " + pathToMopFiles + "/*.mop");
+        getLog().info("Executing javamop -merge " + pathToMopFiles + File.separator + "*.mop");
         getLog().info("--------------------------------------------------------");
 
         ProcessUtil.executeExternalProgram(getLog(),
-                pathToJavaMop + "/javamop"
+                pathToJavaMop + File.separator + "javamop"
                 , "-merge"
-                , pathToMopFiles + "/*.mop");
+                , pathToMopFiles + File.separator + "*.mop");
     }
 
     private void executeRVMonitor() throws MojoExecutionException, IOException {
-
         getLog().info("--------------------------------------------------------");
-        getLog().info("Executing rv-monitor -merge " + pathToMopFiles + "/*.rvm");
+        getLog().info("Executing rv-monitor -merge " + pathToMopFiles + File.separator + "*.rvm");
         getLog().info("--------------------------------------------------------");
+        
         ProcessUtil.executeExternalProgram(getLog(),
-                pathToMonitor + "/rv-monitor"
+                pathToMonitor + File.separator + "rv-monitor"
                 , "-merge"
                 , "-d"
-                , "./src/main/java/mop"
-                , pathToMopFiles + "/*.rvm");
-
+                , SRC_MAIN_JAVA_MOP
+                , pathToMopFiles + File.separator + "*.rvm");
     }
 
     private void removeGeneratedMonitorFiles() {
         File dest = new File(pathToMopFiles);
         if(dest.exists() && dest.isDirectory()) {
-            String[] files = dest.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".aj") || name.endsWith("rvm");
-                }
-            });
-            for(String s:  files) {
-                File file = new File(dest.getAbsolutePath() + File.separator + s);
-                file.delete();
-            }
+        	File[] files = dest.listFiles((d,f)-> 
+        			f.toLowerCase().endsWith(".aj") 
+        			|| f.toLowerCase().endsWith(".rvm"));
+            deleteFiles(files);
         }
     }
 
     private void removeGeneratedJavaFiles() {
         if(destinationPackage == null) {
-            destinationPackage = "./src/main/java/mop";
+            destinationPackage = SRC_MAIN_JAVA_MOP;
         }
         File dest = new File(destinationPackage);
-
         if(dest.exists() && dest.isDirectory()) {
-            String[] files = dest.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".java");
-                }
-            });
-            for(String s:  files) {
-                File file = new File(destinationPackage + File.separator + s);
-                file.delete();
-            }
+        	File[] files = dest.listFiles((d,f)-> f.toLowerCase().endsWith(".java"));
+            deleteFiles(files);
         }
     }
+
+	private void deleteFiles(File[] files) {
+		for(File f:  files) {
+		    f.delete();
+		}
+	}
 
 }
