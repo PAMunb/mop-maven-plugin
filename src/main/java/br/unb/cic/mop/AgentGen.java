@@ -13,11 +13,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 @Mojo(name = "agent-gen", defaultPhase = LifecyclePhase.PROCESS_CLASSES)
-public class AgentGen extends AbstractMojo  {
-	
-	private static final String TARGET_CLASSES = File.separator + "target" + File.separator + "classes";
+public class AgentGen extends AbstractMojo {
 
-	@Parameter(defaultValue = "${project}", required = true, readonly = true)
+    private static final String TARGET_CLASSES = File.separator + "target" + File.separator + "classes";
+
+    @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
     @Parameter(property = "path-to-java-mop")
@@ -25,29 +25,29 @@ public class AgentGen extends AbstractMojo  {
 
     @Parameter(property = "path-to-mop-files")
     private String pathToMopFiles;
-    
+
     @Parameter(property = "skipMopAgent")
     private boolean skipMopAgent = false;
 
     @Override
     public void execute() throws MojoExecutionException {
-    	if(skipMopAgent) {
-    		getLog().info("AgentGen skipped.");
-    		return;
-    	}
+        if (skipMopAgent) {
+            getLog().info("AgentGen skipped.");
+            return;
+        }
         try {
             List<Dependency> cp = project.getDependencies();
             StringBuilder sb = new StringBuilder();
 
             String classpath = cp.stream()
-            	.map(d -> artifact(d))
-            	.collect(Collectors.joining(":"));
-            
+                    .map(this::artifact)
+                    .collect(Collectors.joining(":"));
+
             sb.append(classpath);
             sb.append(project.getBasedir() + TARGET_CLASSES);
 
             getLog().info("--------------------------------------------------------");
-            getLog().info("Executing javamopagent " +  pathToMopFiles + File.separator + "*.aj");
+            getLog().info("Executing javamopagent " + pathToMopFiles + File.separator + "*.aj");
             getLog().info("--------------------------------------------------------");
 
             ProcessUtil.addVariable("CLASSPATH", sb.toString());
@@ -58,7 +58,7 @@ public class AgentGen extends AbstractMojo  {
                     "-n",
                     "JavaMOPAgent");
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
         }

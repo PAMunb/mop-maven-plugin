@@ -25,7 +25,7 @@ public class MOPGen extends AbstractMojo {
 
     @Parameter(property = "destination-package")
     private String destinationPackage;
-    
+
     @Parameter(property = "skipMopAgent")
     private boolean skipMopAgent = false;
 
@@ -64,7 +64,7 @@ public class MOPGen extends AbstractMojo {
         getLog().info("--------------------------------------------------------");
         getLog().info("Executing rv-monitor -merge " + pathToMopFiles + File.separator + "*.rvm");
         getLog().info("--------------------------------------------------------");
-        
+
         ProcessUtil.executeExternalProgram(getLog(),
                 pathToMonitor + File.separator + "rv-monitor"
                 , "-s"
@@ -77,8 +77,8 @@ public class MOPGen extends AbstractMojo {
     private void removeGeneratedMonitorFiles() {
         File dest = new File(pathToMopFiles);
         if(dest.exists() && dest.isDirectory()) {
-        	File[] files = dest.listFiles((d,f)-> 
-        			f.toLowerCase().endsWith(".aj") 
+        	File[] files = dest.listFiles((d,f)->
+        			f.toLowerCase().endsWith(".aj")
         			|| f.toLowerCase().endsWith(".rvm"));
             deleteFiles(files);
         }
@@ -96,7 +96,7 @@ public class MOPGen extends AbstractMojo {
     }
 
 	private void deleteFiles(File[] files) {
-		for(File f:  files) {
+		for(File f: files) {
 		    f.delete();
 		}
 	}
