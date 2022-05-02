@@ -55,6 +55,7 @@ public class MOPGen extends AbstractMojo {
 
         ProcessUtil.executeExternalProgram(getLog(),
                 pathToJavaMop + File.separator + "javamop"
+                , "-s"
                 , "-merge"
                 , pathToMopFiles + File.separator + "*.mop");
     }
@@ -66,6 +67,7 @@ public class MOPGen extends AbstractMojo {
         
         ProcessUtil.executeExternalProgram(getLog(),
                 pathToMonitor + File.separator + "rv-monitor"
+                , "-s"
                 , "-merge"
                 , "-d"
                 , SRC_MAIN_JAVA_MOP
