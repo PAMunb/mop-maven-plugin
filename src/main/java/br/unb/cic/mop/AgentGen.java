@@ -59,7 +59,7 @@ public class AgentGen extends AbstractMojo {
                     "JavaMOPAgent");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            getLog().error(e);
             throw new MojoExecutionException(e.getMessage());
         }
     }

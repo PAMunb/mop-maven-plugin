@@ -3,13 +3,13 @@ package br.unb.cic.mop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class ProcessUtil {
 
@@ -21,7 +21,7 @@ public class ProcessUtil {
 
     static void executeExternalProgram(Log log, String... args) throws MojoExecutionException, IOException {
 
-    	System.err.println(Arrays.asList(args).stream().collect(Collectors.joining(" ")));
+    	System.out.println(Arrays.asList(args).stream().collect(Collectors.joining(" ")));
 
         ProcessBuilder builder = new ProcessBuilder(args);
 //        for(String k : environment.keySet()) {

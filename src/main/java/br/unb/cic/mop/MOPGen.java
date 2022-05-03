@@ -77,7 +77,7 @@ public class MOPGen extends AbstractMojo {
     private void removeGeneratedMonitorFiles() {
         File dest = new File(pathToMopFiles);
         if(dest.exists() && dest.isDirectory()) {
-        	File[] files = dest.listFiles((d,f)->
+        	File[] files = dest.listFiles((d,f) ->
         			f.toLowerCase().endsWith(".aj")
         			|| f.toLowerCase().endsWith(".rvm"));
             deleteFiles(files);
