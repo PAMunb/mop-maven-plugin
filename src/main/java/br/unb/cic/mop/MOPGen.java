@@ -73,7 +73,7 @@ public class MOPGen extends AbstractMojo {
         args.add("-merge");
         args.add(pathToMopFiles + File.separator + "*.mop");
         
-        ProcessUtil.executeExternalProgram(getLog(), (String[]) args.toArray());
+        ProcessUtil.executeExternalProgram(getLog(), args.toArray(new String[0]));
     }
 
     private void executeRVMonitor() throws MojoExecutionException, IOException {
