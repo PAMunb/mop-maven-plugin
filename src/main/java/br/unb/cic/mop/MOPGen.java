@@ -2,6 +2,8 @@ package br.unb.cic.mop;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,6 +30,12 @@ public class MOPGen extends AbstractMojo {
 
     @Parameter(property = "skipMopAgent")
     private boolean skipMopAgent = false;
+    
+    @Parameter(property = "generateMopStatistics")
+    private boolean generateMopStatistics = true;
+    
+    @Parameter(property = "useEvolutionAwareMop")
+    private boolean useEvolutionAwareMop = false;
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -53,11 +61,19 @@ public class MOPGen extends AbstractMojo {
         getLog().info("Executing javamop -merge " + pathToMopFiles + File.separator + "*.mop");
         getLog().info("--------------------------------------------------------");
 
-        ProcessUtil.executeExternalProgram(getLog(),
-                pathToJavaMop + File.separator + "javamop"
-                , "-s"
-                , "-merge"
-                , pathToMopFiles + File.separator + "*.mop");
+        List<String> args = new ArrayList<>();
+        args.add(pathToJavaMop + File.separator + "javamop");
+        if(generateMopStatistics) {
+            args.add("-s");
+        }
+        if(useEvolutionAwareMop) {
+            //TODO
+            args.add("-emop");
+        }
+        args.add("-merge");
+        args.add(pathToMopFiles + File.separator + "*.mop");
+        
+        ProcessUtil.executeExternalProgram(getLog(), (String[]) args.toArray());
     }
 
     private void executeRVMonitor() throws MojoExecutionException, IOException {
