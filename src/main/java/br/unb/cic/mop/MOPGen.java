@@ -33,9 +33,7 @@ public class MOPGen extends AbstractMojo {
     
     @Parameter(property = "generateMopStatistics")
     private boolean generateMopStatistics = true;
-    
-    @Parameter(property = "useEvolutionAwareMop")
-    private boolean useEvolutionAwareMop = false;
+
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -66,10 +64,6 @@ public class MOPGen extends AbstractMojo {
         if(generateMopStatistics) {
             args.add("-s");
         }
-        if(useEvolutionAwareMop) {
-            //TODO
-            args.add("-emop");
-        }
         args.add("-merge");
         args.add(pathToMopFiles + File.separator + "*.mop");
         
@@ -81,13 +75,17 @@ public class MOPGen extends AbstractMojo {
         getLog().info("Executing rv-monitor -merge " + pathToMopFiles + File.separator + "*.rvm");
         getLog().info("--------------------------------------------------------");
 
-        ProcessUtil.executeExternalProgram(getLog(),
-                pathToMonitor + File.separator + "rv-monitor"
-                , "-s"
-                , "-merge"
-                , "-d"
-                , SRC_MAIN_JAVA_MOP
-                , pathToMopFiles + File.separator + "*.rvm");
+        List<String> args = new ArrayList<>();
+        args.add(pathToMonitor + File.separator + "rv-monitor");
+        if(generateMopStatistics) {
+            args.add("-s");
+        }
+        args.add("-merge");
+        args.add("-d");
+        args.add(SRC_MAIN_JAVA_MOP);
+        args.add(pathToMopFiles + File.separator + "*.rvm");
+        
+        ProcessUtil.executeExternalProgram(getLog(), args.toArray(new String[0]));
     }
 
     private void removeGeneratedMonitorFiles() {
